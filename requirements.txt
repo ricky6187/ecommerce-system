@@ -1,0 +1,20 @@
+# for backend fastapi
+fastapi
+uvicorn
+pydantic
+
+# db
+sqlalchemy
+psycopg2-binary          # PostgreSQL driver for SQLAlchemy
+python-dotenv            # loads .env
+
+# auth
+PyJWT                    # import jwt
+
+# images cloud
+python-multipart         # not imported directly, but fastapi need it for form(...) / uploadFile in main.py
+cloudinary               # product image uploads
+
+# frontend streamlit
+streamlit
+requests
