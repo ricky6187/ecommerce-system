@@ -1,0 +1,42 @@
+name: E-Commerce CI/CD
+
+on:
+  push:
+    branches: ["main"] # push main then launch
+
+jobs:
+  backend-test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4 # github build-in copy code to vm
+
+      - name: Set up Python
+        uses: actions/setup-python@v5 # install python
+        with:
+          python-version: "3.10"
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
+          pip install pytest httpx psycopg2-binary
+
+      - name: Run Pytest
+        env:
+          # replace the env with the one in github for test
+          DATABASE_URL: ${{ secrets.TEST_DATABASE_URL }}
+          CLOUDINARY_CLOUD_NAME: "test"
+          CLOUDINARY_API_KEY: "test"
+          CLOUDINARY_API_SECRET: "test"
+        run: |
+          python scripts/init_db.py
+          pytest
+
+  deploy-to-render:
+    needs: backend-test # run only after backend-test passed
+    runs-on: ubuntu-latest
+    steps:
+      - name: Trigger Render Deploy
+        run: |
+          curl -X POST "${{ secrets.RENDER_DEPLOY_HOOK }}"
