@@ -15,9 +15,15 @@ import cloudinary.uploader
 
 import logging
 
+from fastapi.middleware.cors import CORSMiddleware 
+
 load_dotenv()
 
-BACKEND_URL = "http://127.0.0.1:8000"
+origins = [
+    "http://localhost:8501",
+    "http://127.0.0.1:8501",
+    "https://ecommerce-system.streamlit.app/",
+]
 
 cloudinary.config(
     cloud_name = os.getenv("CLOUDINARY_CLOUD_NAME"),
@@ -34,6 +40,14 @@ logging.basicConfig(
 logger = logging.getLogger(__name__)
 
 app = FastAPI(title="sale system api")
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins,
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 @app.post("/api/products", status_code=status.HTTP_201_CREATED)
 def create_product(
