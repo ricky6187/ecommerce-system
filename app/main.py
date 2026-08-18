@@ -2,7 +2,7 @@ from fastapi import FastAPI, Depends, HTTPException, status, UploadFile, File, F
 from sqlalchemy.orm import Session
 from app.database import get_db
 from app import models
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 from fastapi.staticfiles import StaticFiles
 import os
 from dotenv import load_dotenv
@@ -106,7 +106,8 @@ def create_product(
 
 class ProductOrder(BaseModel):
     product_id: int
-    quantity: int
+    # must positive
+    quantity: int = Field(gt=0)
 
 @app.post("/api/orders", status_code=status.HTTP_201_CREATED)
 def create_order(
@@ -197,7 +198,7 @@ def register(req: LoginRequest, db: Session = Depends(get_db) ):
         "username": result.username
     }
 
-@app.post("/api/login")
+@app.post("/api/login", status_code=status.HTTP_200_OK)
 def login(req: LoginRequest, db: Session = Depends(get_db)):
     username = req.username
     password = req.password
@@ -223,7 +224,7 @@ def login(req: LoginRequest, db: Session = Depends(get_db)):
         "role_identity": user.role
     }
 
-@app.post("/api/logout")
+@app.post("/api/logout", status_code=status.HTTP_204_NO_CONTENT)
 def logout(
     current_user: str = Depends(auth_service.get_current_user_from_token)
 ):
@@ -237,7 +238,7 @@ def logout(
         "message": "Logged out successfully! Your token has been invalidated."
     }
 
-@app.get("/api/products")
+@app.get("/api/products", status_code=status.HTTP_200_OK)
 def get_product(
     db: Session = Depends(get_db),
     current_user: str = Depends(auth_service.get_current_user_from_token)

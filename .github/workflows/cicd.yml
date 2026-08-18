@@ -31,7 +31,7 @@ jobs:
           CLOUDINARY_API_SECRET: "test"
         run: |
           python scripts/init_db.py
-          pytest
+          python -m pytest
 
   deploy-to-render:
     needs: backend-test # run only after backend-test passed
