@@ -34,8 +34,6 @@ logging.basicConfig(
 logger = logging.getLogger(__name__)
 
 app = FastAPI(title="sale system api")
-# if url has static mean take file from dir static
-app.mount("/static", StaticFiles(directory="static"), name="static")
 
 @app.post("/api/products", status_code=status.HTTP_201_CREATED)
 def create_product(
