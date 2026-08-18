@@ -22,7 +22,7 @@ load_dotenv()
 origins = [
     "http://localhost:8501",
     "http://127.0.0.1:8501",
-    "https://ecommerce-system.streamlit.app/",
+    "https://ecommerce-system.streamlit.app",
 ]
 
 cloudinary.config(
