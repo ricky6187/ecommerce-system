@@ -21,3 +21,6 @@ requests
 
 pytest
 httpx
+
+# encrypt
+argon2-cffi

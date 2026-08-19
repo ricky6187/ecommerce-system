@@ -4,6 +4,8 @@ import jwt
 import hashlib
 import base64
 from dotenv import load_dotenv
+from argon2 import PasswordHasher
+from argon2.exceptions import VerifyMismatchError
 
 load_dotenv()
 # this is for password encrypt
@@ -14,13 +16,17 @@ ALGORITHM = "HS256"
 ACCESS_TOKEN_EXPIRE_MINUTES = 30
 TOKEN_BLACKLIST = set()
 
+ph = PasswordHasher()
+
 def hash_password(password: str) -> str:
-    password_bytes = password.encode('utf-8')
-    hash_obj = hashlib.sha256(password_bytes).digest()
-    return base64.b64encode(hash_obj).decode('utf-8')
+    return ph.hash(password)
 
 def verify_password(plain_password: str, hashed_password: str) -> bool:
-    return hash_password(plain_password) == hashed_password
+    try:
+        ph.verify(hashed_password, plain_password)
+        return True
+    except VerifyMismatchError:
+        return False
 
 def create_access_token(data: dict) -> str:
     to_encode = data.copy()
