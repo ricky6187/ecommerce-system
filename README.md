@@ -6,6 +6,13 @@ A ecommerce system with a **FastAPI + PostgreSQL** backend and a **Streamlit** s
 
 - **Backend:** [Render](https://ecommerce-system-4od2.onrender.com) — FastAPI service with environment variables set in the dashboard
 - **Frontend:** [Streamlit Community Cloud](https://ecommerce-system.streamlit.app) — You can visit the website here!
+For convenience, you can use the account to test below:
+
+| Role | Username | Password |
+| :--- | :--- | :--- |
+| **Administrator** | `admin` | `admin123456` |
+| **Customer** | `user` | `user123456` |
+* these passwords are encrypted in database.
 
 > **Note on Free Hosting:** Hosted on Render's free tier. If the app has been inactive, the initial request may take 30–50 seconds while the backend container wakes up.
 
