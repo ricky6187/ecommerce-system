@@ -107,7 +107,7 @@ def create_product(
 class ProductOrder(BaseModel):
     product_id: int
     # must positive
-    quantity: int = Field(gt=0)
+    quantity: int = Field(..., gt=0)
 
 @app.post("/api/orders", status_code=status.HTTP_201_CREATED)
 def create_order(
@@ -173,7 +173,7 @@ def create_order(
 
 class LoginRequest(BaseModel):
     username: str
-    password: str
+    password: str = Field(..., min_length=8)
 
 @app.post("/api/register", status_code=status.HTTP_201_CREATED)
 def register(req: LoginRequest, db: Session = Depends(get_db) ):

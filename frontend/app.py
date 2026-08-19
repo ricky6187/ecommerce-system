@@ -23,57 +23,57 @@ if not st.session_state.logged_in:
         password = st.text_input("Password", type="password")
         submit_button = st.form_submit_button("Login")
 
-    if submit_button:
-        if username and password:
-            data = {
-                "username": username,
-                "password": password
-            }
-            response = requests.post(f"{BACKEND_URL}/api/login", json=data)
+        if submit_button:
+            if username and password:
+                data = {
+                    "username": username,
+                    "password": password
+                }
+                response = requests.post(f"{BACKEND_URL}/api/login", json=data)
 
-            if response.status_code == 200:
-                result = response.json()
-                st.session_state.logged_in = True
-                st.session_state.access_token = result.get("access_token")
-                st.session_state.user_role = result.get("role_identity")
-                st.success("Login successfully! Loading...")
-                st.rerun()
+                if response.status_code == 200:
+                    result = response.json()
+                    st.session_state.logged_in = True
+                    st.session_state.access_token = result.get("access_token")
+                    st.session_state.user_role = result.get("role_identity")
+                    st.success("Login successfully! Loading...")
+                    st.rerun()
 
-            elif response.status_code in [401, 500]:
-                result = response.json()
-                st.error(result.get("detail", "Login failed! Try again."))
+                elif response.status_code in [401, 500]:
+                    result = response.json()
+                    st.error(result.get("detail", "Login failed! Try again."))
+                else:
+                    st.error(f"Server Error! Status code: {response.status_code}")
             else:
-                st.error(f"Server Error! Status code: {response.status_code}")
-
-        else:
-            st.warning("Please enter username and password!")
+                st.warning("Please enter username and password!")
 
     st.write("New to our system? Create an account below!")
     
     with st.form("register_form", clear_on_submit=True):
-            new_username = st.text_input("Username")
-            new_password = st.text_input("Password", type="password")
-            register_button = st.form_submit_button("Register")
+        new_username = st.text_input("Username")
+        new_password = st.text_input("Password", type="password")
+        register_button = st.form_submit_button("Register")
 
-    if register_button:
-        if new_username and new_password:
-            data = {
-                "username": new_username,
-                "password": new_password
-            }
-            response = requests.post(f"{BACKEND_URL}/api/register", json=data)
-
-            if response.status_code == 201:
-                st.success("Account created! You can login now.")
-
-            elif response.status_code in [400, 500]:
-                result = response.json()
-                st.error(result.get("detail", "Register failed! Try again"))
+        if register_button:
+            if not new_username or not new_password:
+                st.warning("Please enter username and password!")
+            elif len(new_password) < 8:
+                st.error("Password must be at least 8 characters long!")
             else:
-                st.error(f"Server Error! Status code: {response.status_code}")
-
-        else:
-            st.warning("Please enter username and password!")
+                data = {
+                    "username": new_username,
+                    "password": new_password
+                }
+                response = requests.post(f"{BACKEND_URL}/api/register", json=data)
+                
+                if response.status_code == 201:
+                    st.success("Account created! You can login now.")
+                
+                elif response.status_code in [400, 500]:
+                    result = response.json()
+                    st.error(result.get("detail", "Register failed! Try again"))
+                else:
+                    st.error(f"Server Error! Status code: {response.status_code}")
 
 else:
     with st.sidebar:
