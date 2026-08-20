@@ -149,7 +149,5 @@ On every push to `main`, GitHub Actions:
 
 ## Known Limitations / Roadmap
 
-- Password hashing uses SHA-256 without salt — moving to bcrypt is planned
 - Token blacklist is in-memory — resets on server restart (Redis-backed is the next step)
 - No rate limiting on login/register endpoints
-- No password strength policy yet
